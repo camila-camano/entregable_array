@@ -1,5 +1,6 @@
 package com.example.arrayproducts.controller;
 
+import com.example.arrayproducts.annotations.CustomMethodAnotation;
 import com.example.arrayproducts.handle.ProductoError;
 import com.example.arrayproducts.model.Producto;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,8 @@ import java.util.Map;
 public class ProductoController {
 
    Logger logger = LogManager.getLogger(ProductoController.class);
+
+
 
     private final List<Producto> productList = new ArrayList<Producto>();
 
@@ -60,8 +63,10 @@ public class ProductoController {
     }
 
     @PutMapping("/put/{id}")
+    @CustomMethodAnotation
     public Producto updateProduct(@PathVariable Long id, @RequestBody Producto p) throws ProductoError {
         logger.info("PUT request recibido.");
+
         if (id == 0 || id > productList.size()) {
             throw new ProductoError("Error: el ID es 0 o no existe.");
         } else {
@@ -78,8 +83,11 @@ public class ProductoController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @CustomMethodAnotation
     public void deleteProduct(@PathVariable Long id) throws ProductoError{
         logger.info("DELETE request recibido.");
+
+
         if (id == 0 || id > productList.size()) {
             logger.info("ID inválido.");
             throw new ProductoError("Error: el ID es 0 o no existe.");
