@@ -22,7 +22,7 @@ public class ProductoController {
     public String getMensaje(){
        logger.info("GET ejemplo recibido.");
 
-        return "ejemplo";
+        return "Mesanej de ejemplo.";
     }
 
     @GetMapping("/getall")
@@ -58,5 +58,36 @@ public class ProductoController {
         logger.info("POST producto agregado.");
         return "Se agrego un nuevo producto con ID: " + productList.size();
     }
+
+    @PutMapping("/put/{id}")
+    public Producto updateProduct(@PathVariable Long id, @RequestBody Producto p) throws ProductoError {
+        logger.info("PUT request recibido.");
+        if (id == 0 || id > productList.size()) {
+            throw new ProductoError("Error: el ID es 0 o no existe.");
+        } else {
+            for (Producto product : productList) {
+                if (product.getId() == id) {
+                    product.setName(p.getName());
+                    product.setPrice(p.getPrice());
+                    return product;
+                }
+            }
+
+        }
+        return p;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteProduct(@PathVariable Long id) throws ProductoError{
+        logger.info("DELETE request recibido.");
+        if (id == 0 || id > productList.size()) {
+            logger.info("ID inválido.");
+            throw new ProductoError("Error: el ID es 0 o no existe.");
+        }else{
+            logger.info("Removiendo producto.");
+            productList.remove( id.intValue()-1);
+        }
+    }
+
 
 }
