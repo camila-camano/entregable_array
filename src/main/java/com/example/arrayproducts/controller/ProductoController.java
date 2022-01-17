@@ -23,35 +23,37 @@ public class ProductoController {
 
     @GetMapping("/example")
     public String getMensaje(){
-       logger.info("GET ejemplo recibido.");
+       logger.info("GET EJEMPLO recibido.");
 
-        return "Mesanej de ejemplo.";
+        return "Mensaje de ejemplo.";
     }
 
     @GetMapping("/getall")
     public List<Producto> getAllProducts() throws ProductoError {
+        logger.info("GET ALL recibido.");
         if(productList.isEmpty()){
-            logger.error("GET ALL no hay productos.");
-            throw new ProductoError("No hay productos.");
+            throw new ProductoError("Error: no hay productos.");
         }
-        logger.info("GET ALL todos los productos.");
+        logger.info("GET ALL ejecutado con éxito.");
         return productList;
     }
 
     @GetMapping("/{id}")
     public Producto getProduct(@PathVariable Long id) throws ProductoError {
+        logger.info("POST request recibido.");
         for(Producto product : productList){
             if(product.getId() == id){
-                logger.info("GET ID mostrando producto.");
+                logger.info("GET ejecutado con éxito.");
                 return product;
             }
         }
-        logger.error("GET ID no se encontró el producto.");
+        logger.error("Error: ID inválido.");
         throw new ProductoError("Producto no encontrado");
     }
 
     @PostMapping("/post")
     public String addProduct(@RequestBody Map<String,String> requestParam) {
+        logger.info("POST request recibido.");
         String name = requestParam.get("name");
         Integer price = Integer.valueOf(requestParam.get("price"));
         Producto product = new Producto(name,price);
@@ -72,6 +74,9 @@ public class ProductoController {
         } else {
             for (Producto product : productList) {
                 if (product.getId() == id) {
+                    if(p.getName() == ""){
+                        throw  new ProductoError("Error: campo name vacio.");
+                    }
                     product.setName(p.getName());
                     product.setPrice(p.getPrice());
                     return product;
@@ -86,7 +91,6 @@ public class ProductoController {
     @CustomMethodAnotation
     public void deleteProduct(@PathVariable Long id) throws ProductoError{
         logger.info("DELETE request recibido.");
-
 
         if (id == 0 || id > productList.size()) {
             logger.info("ID inválido.");
